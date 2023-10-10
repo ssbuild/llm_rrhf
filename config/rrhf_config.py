@@ -48,7 +48,7 @@ train_info_args = {
 
 
     'optimizer_betas': (0.9, 0.999),
-    'train_batch_size': 4,
+    'train_batch_size': 1,
     'eval_batch_size': 2,
     'test_batch_size': 2,
     'learning_rate': 2e-5,  #
@@ -90,7 +90,7 @@ train_info_args_hf = {
     'train_file': [ './data/train.json' ],
     'do_eval': False,
     'do_predict': False,
-    "per_device_train_batch_size": 2,
+    "per_device_train_batch_size": 1,
     "per_device_eval_batch_size": 2,
     "gradient_accumulation_steps": 1,
     "evaluation_strategy": "no",
@@ -154,7 +154,7 @@ train_info_args_colossalai = {
     'train_file': [ './data/train.json' ],
     'do_eval': False,
     'do_predict': False,
-    "per_device_train_batch_size": 2,
+    "per_device_train_batch_size": 1,
     "per_device_eval_batch_size": 2,
     "gradient_accumulation_steps": 1, # colossalai不支持梯度积累
     "evaluation_strategy": "no",
@@ -214,7 +214,7 @@ train_info_args_ac = {
     'train_file': [ './data/finetune_train_examples.json' ],
     'do_eval': False,
     'do_predict': False,
-    "per_device_train_batch_size": 2,
+    "per_device_train_batch_size": 1,
     "per_device_eval_batch_size": 2,
     "gradient_accumulation_steps": 1,
     "evaluation_strategy": "no",

@@ -112,12 +112,7 @@ class NN_DataHelper_Base(DataHelper):
 
         pad_token_id = self.tokenizer.pad_token_id
         for k in batch[0].keys():
-            pad_val = None
-            if k == 'input_ids':
-                pad_val = pad_token_id
-            elif k == 'labels':
-                pad_val = -100
-
+            pad_val = -100 if 'label' in k else pad_token_id
             val = o[k]
             if pad_val is not None:
                 val = torch.nn.utils.rnn.pad_sequence(
@@ -130,8 +125,6 @@ class NN_DataHelper_Base(DataHelper):
                 val = torch.transpose(val, 2, 1)
             val = torch.reshape(val, (-1, *val.size()[2:]))
             o[k] = val
-
-        o['attention_mask'] = torch.ne(o['input_ids'], pad_token_id)
         return o
 
 

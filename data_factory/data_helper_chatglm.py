@@ -37,18 +37,24 @@ class NN_DataHelper_chatglm(NN_DataHelper_Base):
                 o[k].append(torch.tensor(b[k]))
 
         ctxlens = o.pop('ctxlen')
-        ctxlens2 = o.pop('ctxlen2')
-        assert ctxlens is not None and ctxlens2 is not None
+        assert ctxlens is not None
 
         seqlen = np.max([len(_) for _ in o['input_ids']])
-        if 'input_ids2' in o:
-            seqlen = np.max([seqlen] + [len(_) for _ in o['input_ids2']])
+        pad_token_id = self.tokenizer.pad_token_id
+        for k in batch[ 0 ].keys():
+            pad_val = -100 if 'label' in k else pad_token_id
+            val = o[ k ]
+            if pad_val is not None:
+                val = torch.nn.utils.rnn.pad_sequence(
+                    val, batch_first=True, padding_value=pad_val
+                )
+            else:
+                val = torch.stack(val)
 
-        tokenizer: PreTrainedTokenizer = self.tokenizer
-        for k, v in o.items():
-            pad_val = tokenizer.pad_token_id if 'label' not in k else -100
-            o[k] = torch.stack(
-                [F.pad(_, (0, seqlen - len(_)), mode='constant', value=pad_val) for _ in v])
+            if val.dim() > 2:
+                val = torch.transpose(val, 2, 1)
+            val = torch.reshape(val, (-1, *val.size()[ 2: ]))
+            o[ k ] = val
         max_len = seqlen
 
         input_ids = o['input_ids']
@@ -56,10 +62,5 @@ class NN_DataHelper_chatglm(NN_DataHelper_Base):
         o['attention_mask'] = attention_mask.bool()
         o['position_ids'] = position_ids.long()
         o["labels"] = o["labels"].long()
-
-        input_ids2 = o['input_ids2']
-        attention_mask, position_ids = build_masks_and_position_ids_glm(input_ids2,ctxlens2, max_len)
-        o['attention_mask2'] = attention_mask.bool()
-        o['position_ids2'] = position_ids.long()
-        o["labels2"] = o["labels2"].long()
+        o[ "scores" ] = o[ "scores" ].float()
         return o

@@ -36,11 +36,11 @@ global_args = {
 
 
 if global_args["enable_lora"]:
-    from config.sft_config_lora import train_info_args,train_info_args_hf,train_info_args_colossalai,train_info_args_ac,train_model_config
+    from config.rrhf_config_lora import train_info_args,train_info_args_hf,train_info_args_colossalai,train_info_args_ac,train_model_config
 elif global_args["enable_ptv2"]:
     raise NotImplemented
 else:
-    from config.sft_config import train_info_args,train_info_args_hf,train_info_args_colossalai,train_info_args_ac,train_model_config
+    from config.rrhf_config import train_info_args,train_info_args_hf,train_info_args_colossalai,train_info_args_ac,train_model_config
 
 assert global_args["trainer_backend"] in ["pl","hf","cl","ac"]
 
