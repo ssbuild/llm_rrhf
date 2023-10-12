@@ -1,8 +1,11 @@
 # @Time    : 2023/4/19 23:02
 # @Author  : tk
 # @FileName: data_utils
-from collections import OrderedDict
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
+from collections import OrderedDict
 from deep_training.data_helper import ModelArguments, TrainingArguments, DataArguments, TrainingArgumentsHF, \
     TrainingArgumentsCL, TrainingArgumentsAC
 from deep_training.nlp.models.petl import PetlArguments
